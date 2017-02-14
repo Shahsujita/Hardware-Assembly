@@ -1,0 +1,51 @@
+# Sujita Shah ID:5210428
+# Yan Ke ID:5110792
+
+.pos 0
+irmovq stack, %rsp
+call main
+halt
+
+.align 8
+# Source block
+src:
+.quad 0x00a
+.quad 0x0b0
+.quad 0xc00
+# Destination block
+dest:
+.quad 0x111
+.quad 0x222
+.quad 0x333
+#initialize len
+len:
+.quad 0x3
+
+main: 
+	irmovq src, %rdi
+    irmovq dest, %rsi
+    irmovq len, %rdx
+    mrmovq (%rdx), %rdx
+    call copy_block
+    ret
+copy_block:
+    irmovq $1, %rbx
+    irmovq $8, %r8
+	xorq %rax, %rax
+    andq %rdx, %rdx
+    jmp test
+   
+loop:
+	mrmovq (%rdi), %rcx
+	addq %r8, %rdi
+	rmmovq %rcx, (%rsi)
+	addq %r8, %rsi
+	xorq %rcx, %rax
+	subq %rbx, %rdx
+test:
+   jg loop
+   ret
+   
+  .pos 0x200
+  
+ stack: 
